@@ -1,0 +1,45 @@
+gfxmenu /gfxmenu
+
+title <2/1>Windows XP(sp3) Setup (from ISO)\n * start windows XP setup(1)
+find -set-root /xp.iso
+map (hd0) (hd1)
+map (hd1) (hd0)
+map --mem /firadisk.img (fd1)
+map --mem (md)0x6000+800 (fd0)
+map --mem /XP.iso (0xff)
+map --hook
+dd if=(fd1) of=(fd0) count=1
+chainloader (0xff)
+ 
+title <2/2>Continue XP(sp3) Setup\n * start windows XP setup(2)
+find --set-root /XP.iso
+map (hd0) (hd1)
+map (hd1) (hd0)
+map --mem /xp.iso (0xff)
+map --hook
+chainloader (hd0)+1
+
+title -------------------------------------
+pause
+
+title Windows 8 setup\n * start windows 8 setup
+find --set-root /ooomgr
+chainloader /ooomgr
+
+title -------------------------------------
+pause
+
+title Ubuntu 13.10 setup
+ find --set-root /ubuntu-13.10-desktop-i386.iso
+ map --heads=0 --sectors-per-track=0 /ubuntu-13.10-desktop-i386.iso (0xff) || map --mem /ubuntu-13.10-desktop-i386.iso (0xff)
+ map --hook
+ kernel (0xff)/casper/vmlinuz boot=casper iso-scan/filename=/ubuntu-13.10-desktop-i386.iso quiet splash --
+initrd (0xff)/casper/initrd.lz
+
+title -------------------------------------
+pause
+
+title Return to Main Menu
+find --set-root /menu.lst 
+configfile /menu.lst  
+

@@ -1,0 +1,40 @@
+gfxmenu /gfxmenu
+
+title Windows PE \n * booting windows PE
+find --set-root /BDF7MGR
+chainloader /BDF7MGR
+
+title Mini Windows XP\n * booting Mini Windows XP
+find --set-root --ignore-floppies /HBCD/XPLOADER.BIN || default 0
+chainloader /HBCD/XPLOADER.BIN || default 0
+
+title Hiren's BootCD\n * booting Hiren's BootCD
+find --set-root --ignore-floppies /HBCD/BOOT.GZ && map --mem /HBCD/BOOT.GZ (fd0)
+map --hook || default 0
+chainloader (fd0)+1 || default 0
+rootnoverify (fd0) || default 0
+
+title Windows Memory Diagnostic
+find --set-root --ignore-floppies /HBCD/MEMTEST.GZ && map --mem /HBCD/MEMTEST.GZ (fd0)
+map --hook || default 0
+chainloader (fd0)+1 || default 0
+rootnoverify (fd0) || default 0
+
+title -------------------------------------
+pause
+
+title OS Setup 
+find --set-root /setup.lst
+configfile /setup.lst 
+
+title -------------------------------------
+pause
+
+title Shutdown\n * Good bye
+halt
+ 
+title Restart\n * Restart~
+reboot
+ 
+
+
